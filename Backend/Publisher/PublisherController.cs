@@ -14,7 +14,7 @@ public class PublisherController : ControllerBase
 
     // GET: api/publishers
     [HttpGet]
-    public ActionResult<IEnumerable<Publisher>> GetAllPublishers()
+    public ActionResult<IEnumerable<PublisherViewModel>> GetAllPublishers()
     {
         var publishers = _publisherRepository.GetAllPublishers();
         return Ok(publishers);
@@ -22,7 +22,7 @@ public class PublisherController : ControllerBase
 
     // GET: api/publishers/1
     [HttpGet("{id}")]
-    public ActionResult<Publisher> GetPublisherById(int id)
+    public ActionResult<PublisherViewModel> GetPublisherById(int id)
     {
         var publisher = _publisherRepository.GetPublisherById(id);
         if (publisher == null)
@@ -35,42 +35,51 @@ public class PublisherController : ControllerBase
 
     // POST: api/publishers
     [HttpPost]
-    public IActionResult AddPublisher([FromBody] Publisher publisher)
+    public IActionResult AddPublisher([FromBody] PublisherViewModel publisherCreateViewModel)
     {
-        if (publisher == null)
+        if (publisherCreateViewModel == null)
         {
             return BadRequest("Publisher object is null");
         }
 
-        _publisherRepository.AddPublisher(publisher);
+        _publisherRepository.AddPublisher(publisherCreateViewModel);
 
-        return CreatedAtAction(nameof(GetPublisherById), new { id = publisher.Id }, publisher);
+        return CreatedAtAction(nameof(GetPublisherById), new { id = publisherCreateViewModel.Id }, publisherCreateViewModel);
+    }
+
+    // PUT: api/publishers/1
+    [HttpPut("{id}")]
+    public IActionResult UpdatePublisher(int id, [FromBody] PublisherViewModel publisherUpdateViewModel)
+    {
+        if (publisherUpdateViewModel == null || id != publisherUpdateViewModel.Id)
+        {
+            return BadRequest("Invalid data or publisher ID mismatch");
+        }
+
+        var existingPublisher = _publisherRepository.GetPublisherById(id);
+
+        if (existingPublisher == null)
+        {
+            return NotFound();
+        }
+
+        _publisherRepository.UpdatePublisher(id, publisherUpdateViewModel);
+
+        return NoContent();
     }
 
     // DELETE: api/publishers/1
     [HttpDelete("{id}")]
     public IActionResult DeletePublisher(int id)
     {
-        _publisherRepository.DeletePublisher(id);
-        return NoContent();
-    }
+        var publisher = _publisherRepository.GetPublisherById(id);
 
-    // PUT: api/publishers/1
-    [HttpPut("{id}")]
-    public IActionResult UpdatePublisher(int id, [FromBody] Publisher publisher)
-    {
-        if (publisher == null || id != publisher.Id)
-        {
-            return BadRequest("Invalid request");
-        }
-
-        var existingPublisher = _publisherRepository.GetPublisherById(id);
-        if (existingPublisher == null)
+        if (publisher == null)
         {
             return NotFound();
         }
 
-        _publisherRepository.UpdatePublisher(publisher);
+        _publisherRepository.DeletePublisher(id);
 
         return NoContent();
     }

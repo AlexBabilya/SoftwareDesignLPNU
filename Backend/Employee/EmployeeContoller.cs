@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-[Route("api/employees")]
 [ApiController]
+[Route("api/employees")]
 public class EmployeeController : ControllerBase
 {
     private readonly EmployeeRepository _employeeRepository;
@@ -14,18 +14,17 @@ public class EmployeeController : ControllerBase
 
     // GET: api/employees
     [HttpGet]
-    public ActionResult<IEnumerable<Employee>> GetAllEmployees()
+    public ActionResult<IEnumerable<EmployeeViewModel>> GetAllEmployees()
     {
-        var employees = _employeeRepository.GetAllEmployees();
+        var employees = _employeeRepository.GetAllEmployeeViewModels();
         return Ok(employees);
     }
 
     // GET: api/employees/1
     [HttpGet("{id}")]
-    public ActionResult<Employee> GetEmployeeById(int id)
+    public ActionResult<EmployeeViewModel> GetEmployeeById(int id)
     {
-        var employee = _employeeRepository.GetEmployeeById(id);
-
+        var employee = _employeeRepository.GetEmployeeViewModelById(id);
         if (employee == null)
         {
             return NotFound();
@@ -36,35 +35,35 @@ public class EmployeeController : ControllerBase
 
     // POST: api/employees
     [HttpPost]
-    public IActionResult AddEmployee([FromBody] Employee employee)
+    public IActionResult AddEmployee([FromBody] EmployeeViewModel employeeCreateViewModel)
     {
-        if (employee == null)
+        if (employeeCreateViewModel == null)
         {
             return BadRequest("Employee object is null");
         }
 
-        _employeeRepository.AddEmployee(employee);
+        _employeeRepository.AddEmployee(employeeCreateViewModel);
 
-        return CreatedAtAction(nameof(GetEmployeeById), new { id = employee.Id }, employee);
+        return CreatedAtAction(nameof(GetEmployeeById), new { id = employeeCreateViewModel.Id }, employeeCreateViewModel);
     }
 
     // PUT: api/employees/1
     [HttpPut("{id}")]
-    public IActionResult UpdateEmployee(int id, [FromBody] Employee employee)
+    public IActionResult UpdateEmployee(int id, [FromBody] EmployeeViewModel employeeUpdateViewModel)
     {
-        if (employee == null || id != employee.Id)
+        if (employeeUpdateViewModel == null || id != employeeUpdateViewModel.Id)
         {
             return BadRequest("Invalid data or employee ID mismatch");
         }
 
-        var existingEmployee = _employeeRepository.GetEmployeeById(id);
+        var existingEmployee = _employeeRepository.GetEmployeeViewModelById(id);
 
         if (existingEmployee == null)
         {
             return NotFound();
         }
 
-        _employeeRepository.UpdateEmployee(employee);
+        _employeeRepository.UpdateEmployee(id, employeeUpdateViewModel);
 
         return NoContent();
     }
@@ -73,7 +72,7 @@ public class EmployeeController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteEmployee(int id)
     {
-        var employee = _employeeRepository.GetEmployeeById(id);
+        var employee = _employeeRepository.GetEmployeeViewModelById(id);
 
         if (employee == null)
         {

@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-[Route("api/departments")]
 [ApiController]
+[Route("api/departments")]
 public class DepartmentController : ControllerBase
 {
     private readonly DepartmentRepository _departmentRepository;
@@ -14,18 +14,17 @@ public class DepartmentController : ControllerBase
 
     // GET: api/departments
     [HttpGet]
-    public ActionResult<IEnumerable<Department>> GetAllDepartments()
+    public ActionResult<IEnumerable<DepartmentViewModel>> GetAllDepartments()
     {
-        var departments = _departmentRepository.GetAllDepartments();
+        var departments = _departmentRepository.GetAllDepartmentViewModels();
         return Ok(departments);
     }
 
     // GET: api/departments/1
     [HttpGet("{id}")]
-    public ActionResult<Department> GetDepartmentById(int id)
+    public ActionResult<DepartmentViewModel> GetDepartmentById(int id)
     {
-        var department = _departmentRepository.GetDepartmentById(id);
-
+        var department = _departmentRepository.GetDepartmentViewModelById(id);
         if (department == null)
         {
             return NotFound();
@@ -36,35 +35,35 @@ public class DepartmentController : ControllerBase
 
     // POST: api/departments
     [HttpPost]
-    public IActionResult AddDepartment([FromBody] Department department)
+    public IActionResult AddDepartment([FromBody] DepartmentViewModel departmentCreateViewModel)
     {
-        if (department == null)
+        if (departmentCreateViewModel == null)
         {
             return BadRequest("Department object is null");
         }
 
-        _departmentRepository.AddDepartment(department);
+        _departmentRepository.AddDepartment(departmentCreateViewModel);
 
-        return CreatedAtAction(nameof(GetDepartmentById), new { id = department.Id }, department);
+        return CreatedAtAction(nameof(GetDepartmentById), new { id = departmentCreateViewModel.Id }, departmentCreateViewModel);
     }
 
     // PUT: api/departments/1
     [HttpPut("{id}")]
-    public IActionResult UpdateDepartment(int id, [FromBody] Department department)
+    public IActionResult UpdateDepartment(int id, [FromBody] DepartmentViewModel departmentUpdateViewModel)
     {
-        if (department == null || id != department.Id)
+        if (departmentUpdateViewModel == null || id != departmentUpdateViewModel.Id)
         {
             return BadRequest("Invalid data or department ID mismatch");
         }
 
-        var existingDepartment = _departmentRepository.GetDepartmentById(id);
+        var existingDepartment = _departmentRepository.GetDepartmentViewModelById(id);
 
         if (existingDepartment == null)
         {
             return NotFound();
         }
 
-        _departmentRepository.UpdateDepartment(department);
+        _departmentRepository.UpdateDepartment(id, departmentUpdateViewModel);
 
         return NoContent();
     }
@@ -73,7 +72,7 @@ public class DepartmentController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteDepartment(int id)
     {
-        var department = _departmentRepository.GetDepartmentById(id);
+        var department = _departmentRepository.GetDepartmentViewModelById(id);
 
         if (department == null)
         {

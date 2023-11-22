@@ -22,6 +22,7 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddControllers();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddScoped<AuthorRepository>(); // Add this line to register AuthorRepository
         services.AddScoped<BookRepository>(); // Add this line to register AuthorRepository
         services.AddScoped<PublisherRepository>(); // Add this line to register AuthorRepository

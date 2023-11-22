@@ -1,43 +1,52 @@
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 
 public class DepartmentRepository
 {
-    public List<Department> GetAllDepartments()
+    private readonly IMapper _mapper;
+
+    public DepartmentRepository(IMapper mapper)
     {
-        using (var context = new AppDbContext())
-        {
-            return context.Departments.ToList();
-        }
+        _mapper = mapper;
     }
-    
-    public Department GetDepartmentById(int id)
+
+    public List<DepartmentViewModel> GetAllDepartmentViewModels()
     {
         using (var context = new AppDbContext())
         {
-            return context.Departments.Find(id);
+            var departments = context.Departments.ToList();
+            return _mapper.Map<List<DepartmentViewModel>>(departments);
         }
     }
 
-    public void AddDepartment(Department department)
+    public DepartmentViewModel GetDepartmentViewModelById(int id)
     {
         using (var context = new AppDbContext())
         {
+            var department = context.Departments.Find(id);
+            return _mapper.Map<DepartmentViewModel>(department);
+        }
+    }
+
+    public void AddDepartment(DepartmentViewModel departmentCreateViewModel)
+    {
+        using (var context = new AppDbContext())
+        {
+            var department = _mapper.Map<Department>(departmentCreateViewModel);
             context.Departments.Add(department);
             context.SaveChanges();
         }
     }
-        
-    public void UpdateDepartment(Department department)
+
+    public void UpdateDepartment(int id, DepartmentViewModel departmentUpdateViewModel)
     {
         using (var context = new AppDbContext())
         {
-            var existingDepartment = context.Departments.Find(department.Id);
+            var existingDepartment = context.Departments.Find(id);
             if (existingDepartment != null)
             {
-                existingDepartment.Name = department.Name;
-                existingDepartment.Location = department.Location;
-
+                _mapper.Map(departmentUpdateViewModel, existingDepartment);
                 context.SaveChanges();
             }
         }

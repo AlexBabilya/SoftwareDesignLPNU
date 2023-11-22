@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
-[Route("api/books")]
 [ApiController]
+[Route("api/books")]
 public class BookController : ControllerBase
 {
     private readonly BookRepository _bookRepository;
@@ -14,18 +14,17 @@ public class BookController : ControllerBase
 
     // GET: api/books
     [HttpGet]
-    public ActionResult<IEnumerable<Book>> GetAllBooks()
+    public ActionResult<IEnumerable<BookViewModel>> GetAllBooks()
     {
-        var books = _bookRepository.GetAllBooks();
+        var books = _bookRepository.GetAllBookViewModels();
         return Ok(books);
     }
 
     // GET: api/books/1
     [HttpGet("{id}")]
-    public ActionResult<Book> GetBookById(int id)
+    public ActionResult<BookViewModel> GetBookById(int id)
     {
-        var book = _bookRepository.GetBookById(id);
-
+        var book = _bookRepository.GetBookViewModelById(id);
         if (book == null)
         {
             return NotFound();
@@ -36,35 +35,35 @@ public class BookController : ControllerBase
 
     // POST: api/books
     [HttpPost]
-    public IActionResult AddBook([FromBody] Book book)
+    public IActionResult AddBook([FromBody] BookViewModel bookCreateViewModel)
     {
-        if (book == null)
+        if (bookCreateViewModel == null)
         {
             return BadRequest("Book object is null");
         }
 
-        _bookRepository.AddBook(book);
+        _bookRepository.AddBook(bookCreateViewModel);
 
-        return CreatedAtAction(nameof(GetBookById), new { id = book.Id }, book);
+        return CreatedAtAction(nameof(GetBookById), new { id = bookCreateViewModel.Id }, bookCreateViewModel);
     }
 
     // PUT: api/books/1
     [HttpPut("{id}")]
-    public IActionResult UpdateBook(int id, [FromBody] Book book)
+    public IActionResult UpdateBook(int id, [FromBody] BookViewModel bookUpdateViewModel)
     {
-        if (book == null || id != book.Id)
+        if (bookUpdateViewModel == null || id != bookUpdateViewModel.Id)
         {
-            return BadRequest("Invalid input");
+            return BadRequest("Invalid data or book ID mismatch");
         }
 
-        var existingBook = _bookRepository.GetBookById(id);
+        var existingBook = _bookRepository.GetBookViewModelById(id);
 
         if (existingBook == null)
         {
             return NotFound();
         }
 
-        _bookRepository.UpdateBook(book);
+        _bookRepository.UpdateBook(id, bookUpdateViewModel);
 
         return NoContent();
     }
@@ -73,7 +72,7 @@ public class BookController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult DeleteBook(int id)
     {
-        var book = _bookRepository.GetBookById(id);
+        var book = _bookRepository.GetBookViewModelById(id);
 
         if (book == null)
         {
@@ -85,5 +84,4 @@ public class BookController : ControllerBase
         return NoContent();
     }
 }
-
 
