@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class Startup
 {
@@ -21,6 +22,8 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         services.AddControllers();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddScoped<AuthorRepository>(); // Add this line to register AuthorRepository
@@ -33,6 +36,14 @@ public class Startup
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Bookstore API Name", Version = "v1" });
         });
+         services.AddCors(options =>
+        {
+            options.AddPolicy("ReactAppPolicy",
+                builder => builder
+                    .WithOrigins("http://localhost:3000")  // Add the origin of your React app
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });    
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -43,7 +54,7 @@ public class Startup
             new CultureInfo("en-US"),
             // Add other supported cultures as needed
         };
-
+        app.UseCors("ReactAppPolicy");
         app.UseRequestLocalization(new RequestLocalizationOptions
         {
             DefaultRequestCulture = new RequestCulture("en-US"),
@@ -54,6 +65,14 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API Name V1");
+            });
         }
 
         app.UseRouting();
@@ -65,14 +84,6 @@ public class Startup
             endpoints.MapControllers();
         });
    
-        app.UseSwagger();
-
-        // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-        // specifying the Swagger JSON endpoint.
-        app.UseSwaggerUI(c =>
-        {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API Name V1");
-        });
     }
 }
 

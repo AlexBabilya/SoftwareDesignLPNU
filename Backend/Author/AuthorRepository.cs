@@ -23,6 +23,7 @@ public class AuthorRepository
         using (var context = new AppDbContext())
         {
             var author = context.Authors.Find(id);
+            Console.WriteLine(author);
             return _mapper.Map<AuthorViewModel>(author);
         }
     }

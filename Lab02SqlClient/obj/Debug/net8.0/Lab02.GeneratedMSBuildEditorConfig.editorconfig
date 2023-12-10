@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Lab02
-build_property.ProjectDir = /home/oleksandbabilia/Uni/Labs/SoftwareDesign/Lab02/
+build_property.ProjectDir = /home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/Lab02SqlClient/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

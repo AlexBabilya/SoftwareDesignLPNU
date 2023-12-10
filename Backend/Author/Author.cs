@@ -6,8 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 public class Author
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // Assuming Id is not auto-generated
-    [Column("ID")] // Maps to the "ID" column in the database
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
+    [Column("ID")] 
     public int Id { get; set; }
 
     [Required]
@@ -22,7 +22,7 @@ public class Author
     public DateTime Birthdate { get; set; }
 
     [Required]
-    [MaxLength(3)] // Assuming the maximum length for Nationality is 3 characters
+    [MaxLength(3)]
     public string Nationality { get; set; }
 
 }

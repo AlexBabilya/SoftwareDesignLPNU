@@ -2952,11 +2952,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/Lab02/Lab02.csproj",
+      "projectUniqueName": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/Lab02SqlClient/Lab02.csproj",
       "projectName": "Lab02",
-      "projectPath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/Lab02/Lab02.csproj",
+      "projectPath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/Lab02SqlClient/Lab02.csproj",
       "packagesPath": "/home/oleksandbabilia/.nuget/packages/",
-      "outputPath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/Lab02/obj/",
+      "outputPath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/Lab02SqlClient/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/home/oleksandbabilia/.nuget/NuGet/NuGet.Config"

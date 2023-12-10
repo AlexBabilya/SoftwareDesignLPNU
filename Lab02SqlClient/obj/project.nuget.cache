@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DlgDntFZAni2lZHSWBwnZCb4seRf3le/ZN8KILAGfVLHvczuGKlT1/iNZsJnfXiciRH2zjBjAmLfIWrjtKLrow==",
+  "dgSpecHash": "mNhUsMrTV7uIndDb/Fe/hFlI6Zt4iVWsPLcmkLeu4xIt5hqBS8K1TgSPnR8rnoZJ9PpSErxH7tUz16cehVAirA==",
   "success": true,
-  "projectFilePath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/Lab02/Lab02.csproj",
+  "projectFilePath": "/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/Lab02SqlClient/Lab02.csproj",
   "expectedPackageFiles": [
     "/home/oleksandbabilia/.nuget/packages/azure.core/1.25.0/azure.core.1.25.0.nupkg.sha512",
     "/home/oleksandbabilia/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
