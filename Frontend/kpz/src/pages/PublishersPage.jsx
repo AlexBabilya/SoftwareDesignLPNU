@@ -4,10 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import PublisherTable from './PublisherTable';
-import AddPublisherForm from './AddPublisherForm';
-import UpdatePublisherForm from './UpdatePublisherForm';
-import MyNavbar from '../Navbar';
+import PublisherTable from '../components/Publishers/PublisherTable';
+import AddPublisherForm from '../components/Publishers/AddPublisherForm';
+import UpdatePublisherForm from '../components/Publishers/UpdatePublisherForm';
+import MyNavbar from '../components/Navbar';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const PublishersPage = () => {
   const [Publishers, setPublishers] = useState([]);
@@ -26,7 +28,7 @@ const PublishersPage = () => {
     // Function to fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5004/api/Publishers/');
+        const response = await fetch(`${apiUrl}/Publishers/`);
         const data = await response.json();
         setPublishers(data);
       } catch (error) {
@@ -41,7 +43,7 @@ const PublishersPage = () => {
   const handleDelete = async (PublisherId) => {
     try {
       // Make the DELETE request to delete the Publisher
-      const response = await fetch(`http://localhost:5004/api/Publishers/${PublisherId}`, {
+      const response = await fetch(`${apiUrl}/Publishers/${PublisherId}`, {
         method: 'DELETE',
       });
 
@@ -69,7 +71,7 @@ const PublishersPage = () => {
 
     try {
       // Make the POST request to add a new Publisher
-      const response = await fetch('http://localhost:5004/api/Publishers/', {
+      const response = await fetch(`${apiUrl}/Publishers/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -109,7 +111,7 @@ const PublishersPage = () => {
     e.preventDefault();
     try {
       // Make the PUT request to update the Publisher
-      const response = await fetch(`http://localhost:5004/api/Publishers/${updatePublisher.id}`, {
+      const response = await fetch(`${apiUrl}/Publishers/${updatePublisher.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -141,14 +143,14 @@ const PublishersPage = () => {
       <Container>
         <Row>
           <Col>
-            <h2 class="input-header">Add Publisher</h2>
+            <h2 className="input-header">Add Publisher</h2>
             < AddPublisherForm
               newPublisher={newPublisher} 
               handleInputChange={handleInputChange} 
               handleAddPublisher={handleAddPublisher}/>
           </Col>
           <Col>
-            <h2 class="input-header">Update Publisher</h2>
+            <h2 className="input-header">Update Publisher</h2>
             <UpdatePublisherForm
               updatePublisher={updatePublisher}
               handleUpdatePublisher={handleUpdatePublisher}

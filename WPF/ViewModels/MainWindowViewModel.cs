@@ -8,18 +8,27 @@ using WPF.Models;
 using Avalonia.Markup.Xaml;
 using Newtonsoft.Json; 
 using System.Text;
+using System.Windows.Input;
 
 namespace WPF.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         public ObservableCollection<Author> Authors { get; }
-        public string Greeting => "Weasdlonia!";
+        public string Greeting => "Welcome!";
+        
+        public ICommand AddCommand { get; }
+        public ICommand DeleteCommand { get; }
+        public ICommand UpdateCommand { get; }
 
         public MainWindowViewModel()
         {
             Authors = new ObservableCollection<Author>();
             LoadAuthorsAsync();
+
+            AddCommand = new RelayCommand<Author>(AddAsync);
+            DeleteCommand = new RelayCommand<Author>(DeleteAsync);
+            UpdateCommand = new RelayCommand<Author>(UpdateAsync);
         }
 
         private async void LoadAuthorsAsync()
@@ -46,21 +55,27 @@ namespace WPF.ViewModels
             }
         }
 
-        public async void DeleteAsync(string id)
+        public async void DeleteAsync(object authorObject)
         {
             try
-            {
-                string apiUrl = $"http://localhost:5004/api/authors/{id}";
-
-                using (HttpClient client = new HttpClient())
-                using (HttpResponseMessage response = await client.DeleteAsync(apiUrl))
+            {   
+                if (authorObject is Author author)
                 {
-                    response.EnsureSuccessStatusCode(); 
+                    int id = author.id;  // Access the id property directly
 
-                    var authorToRemove = Authors.FirstOrDefault(author => author.id == int.Parse(id));
-                    if (authorToRemove != null)
+                    string apiUrl = $"http://localhost:5004/api/authors/{id}";
+                    Console.Write(apiUrl);
+                    
+                    using (HttpClient client = new HttpClient())
+                    using (HttpResponseMessage response = await client.DeleteAsync(apiUrl))
                     {
-                        Authors.Remove(authorToRemove);
+                        response.EnsureSuccessStatusCode(); 
+
+                        var authorToRemove = Authors.FirstOrDefault(a => a.id == id);
+                        if (authorToRemove != null)
+                        {
+                            Authors.Remove(authorToRemove);
+                        }
                     }
                 }
             }
@@ -70,29 +85,33 @@ namespace WPF.ViewModels
             }
         }
 
-        public async void AddAsync(string firstName, string lastName, DateTimeOffset? birthdate, string nationality)
+        public async void AddAsync(object authorObject)
         {
             try
-            {
-                string apiUrl = "http://localhost:5004/api/authors/";
-
-                var authorData = new
+            {   
+                if (authorObject is Author author)
                 {
-                    FirstName = firstName,
-                    LastName = lastName,
-                    Birthdate = birthdate,
-                    Nationality = nationality
-                };
+                    string apiUrl = "http://localhost:5004/api/authors/";
 
-                var jsonContent = new StringContent(JsonConvert.SerializeObject(authorData), Encoding.UTF8, "application/json");
+                    // Assuming authorObject has properties like FirstName, LastName, Birthdate, and Nationality
+                    var authorData = new
+                    {
+                        FirstName = author.FirstName,
+                        LastName = author.LastName,
+                        Birthdate = author.Birthdate,
+                        Nationality = author.Nationality
+                    };
 
-                using (HttpClient client = new HttpClient())
-                using (HttpResponseMessage response = await client.PostAsync(apiUrl, jsonContent))
-                {
-                    response.EnsureSuccessStatusCode();
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(authorData), Encoding.UTF8, "application/json");
+                    
+                    using (HttpClient client = new HttpClient())
+                    using (HttpResponseMessage response = await client.PostAsync(apiUrl, jsonContent))
+                    {
+                        response.EnsureSuccessStatusCode();
 
-                    var newAuthor = JsonConvert.DeserializeObject<Author>(await response.Content.ReadAsStringAsync());
-                    Authors.Add(newAuthor);
+                        var newAuthor = JsonConvert.DeserializeObject<Author>(await response.Content.ReadAsStringAsync());
+                        Authors.Add(newAuthor);
+                    }
                 }
             }
             catch (Exception ex)
@@ -101,35 +120,44 @@ namespace WPF.ViewModels
             }
         }
 
-        public async void UpdateAsync(string update_id, string firstName, string lastName, DateTimeOffset? birthdate, string nationality)
+        private T GetPropertyValue<T>(object obj, string propertyName)
+        {
+            var property = obj.GetType().GetProperty(propertyName);
+            return property != null ? (T)property.GetValue(obj) : default;
+        }
+
+        public async void UpdateAsync(object authorObject)
         {
             try
             {
-                string apiUrl = $"http://localhost:5004/api/authors/{update_id}";
-
-                var updatedAuthorData = new
+                if (authorObject is Author author)
                 {
-                    id = update_id,
-                    FirstName = firstName,
-                    LastName = lastName,
-                    Birthdate = birthdate,
-                    Nationality = nationality
-                };
+                    string apiUrl = $"http://localhost:5004/api/authors/{author.id}";
 
-                var jsonContent = new StringContent(JsonConvert.SerializeObject(updatedAuthorData), Encoding.UTF8, "application/json");
-
-                using (HttpClient client = new HttpClient())
-                using (HttpResponseMessage response = await client.PutAsync(apiUrl, jsonContent))
-                {
-                    response.EnsureSuccessStatusCode(); 
-
-                    await response.Content.ReadAsStringAsync();
-                   
-                    var existingAuthor = Authors.FirstOrDefault(author => author.id == int.Parse(update_id));
-                    if (existingAuthor != null)
+                    var updatedAuthorData = new
                     {
-                        int index = Authors.IndexOf(existingAuthor);
-                        Authors[index] = new Author(int.Parse(update_id), firstName, lastName, birthdate, nationality);
+                        id = author.id,
+                        FirstName = author.FirstName,
+                        LastName = author.LastName,
+                        Birthdate = author.Birthdate,
+                        Nationality = author.Nationality
+                    };
+
+                    var jsonContent = new StringContent(JsonConvert.SerializeObject(updatedAuthorData), Encoding.UTF8, "application/json");
+
+                    using (HttpClient client = new HttpClient())
+                    using (HttpResponseMessage response = await client.PutAsync(apiUrl, jsonContent))
+                    {
+                        response.EnsureSuccessStatusCode(); 
+
+                        await response.Content.ReadAsStringAsync();
+                    
+                        var existingAuthor = Authors.FirstOrDefault(author => author.id == author.id);
+                        if (existingAuthor != null)
+                        {
+                            int index = Authors.IndexOf(existingAuthor);
+                            Authors[index] = author;
+                        }
                     }
                 }
             }

@@ -15,7 +15,7 @@ const PublisherTable = ({ Publishers, onDelete, onUpdate }) => {
 
   return (
     <div>
-      <h2 class="header">Publisher Table</h2>
+      <h2 className="header">Publisher Table</h2>
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>

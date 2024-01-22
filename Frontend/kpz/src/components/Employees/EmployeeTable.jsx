@@ -15,7 +15,7 @@ const EmployeeTable = ({ employees, onDelete, onUpdate }) => {
 
   return (
     <div>
-      <h2 class="header">Employee Table</h2>
+      <h2 className="header">Employee Table</h2>
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>

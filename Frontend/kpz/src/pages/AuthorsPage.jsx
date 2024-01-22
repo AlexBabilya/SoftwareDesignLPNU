@@ -3,10 +3,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import AuthorTable from './AuthorTable';
-import AddAuthorForm from './AddAuthorForm';
-import UpdateAuthorForm from './UpdateAuthorForm';
-import MyNavbar from '../Navbar';
+import AuthorTable from '../components/Authors/AuthorTable';
+import AddAuthorForm from '../components/Authors/AddAuthorForm';
+import UpdateAuthorForm from '../components/Authors/UpdateAuthorForm';
+import MyNavbar from '../components/Navbar';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const AuthorsPage = () => {
   const [authors, setAuthors] = useState([]);
@@ -27,7 +29,7 @@ const AuthorsPage = () => {
     // Function to fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5004/api/authors/');
+        const response = await fetch(`${apiUrl}/authors/`);
         const data = await response.json();
         setAuthors(data);
       } catch (error) {
@@ -42,7 +44,7 @@ const AuthorsPage = () => {
   const handleDelete = async (authorId) => {
     try {
       // Make the DELETE request to delete the author
-      const response = await fetch(`http://localhost:5004/api/authors/${authorId}`, {
+      const response = await fetch(`${apiUrl}/authors/${authorId}`, {
         method: 'DELETE',
       });
 
@@ -70,7 +72,7 @@ const AuthorsPage = () => {
 
     try {
       // Make the POST request to add a new author
-      const response = await fetch('http://localhost:5004/api/authors/', {
+      const response = await fetch(`${apiUrl}/authors/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,7 +114,7 @@ const AuthorsPage = () => {
     e.preventDefault();
     try {
       // Make the PUT request to update the author
-      const response = await fetch(`http://localhost:5004/api/authors/${updateAuthor.id}`, {
+      const response = await fetch(`${apiUrl}/authors/${updateAuthor.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -145,14 +147,14 @@ const AuthorsPage = () => {
       <Container>
         <Row>
         <Col>
-        <h2 class="input-header">Add Author</h2>
+        <h2 className="input-header">Add Author</h2>
           < AddAuthorForm
             newAuthor={newAuthor} 
             handleInputChange={handleInputChange} 
             handleAddAuthor={handleAddAuthor}/>
        </Col>
         <Col>
-          <h2 class="input-header">Update Author</h2>
+          <h2 className="input-header">Update Author</h2>
           <UpdateAuthorForm
             updateAuthor={updateAuthor}
             handleUpdateAuthor={handleUpdateAuthor}

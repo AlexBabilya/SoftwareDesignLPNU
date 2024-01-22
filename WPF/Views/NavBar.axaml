@@ -1,0 +1,13 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="WPF.NavBar.NavBar">
+    <Grid Background="#808080" VerticalAlignment="Top" Height="25"> <!-- Set background color to grey and align to the top -->
+        <TextBlock Text="KPZ By Babilia PZ -31" 
+                   HorizontalAlignment="Center" 
+                   VerticalAlignment="Center"
+                   Foreground="White" /> <!-- Set text color to white -->
+    </Grid>
+</UserControl>

@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import BookTable from './BookTable';
-import AddBookForm from './AddBookForm';
-import UpdateBookForm from './UpdateBookForm';
-import MyNavbar from '../Navbar';
+import BookTable from '../components/Books/BookTable';
+import AddBookForm from '../components/Books/AddBookForm';
+import UpdateBookForm from '../components/Books/UpdateBookForm';
+import MyNavbar from '../components/Navbar';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const BooksPage = () => {
   const [Books, setBooks] = useState([]);
@@ -28,7 +30,7 @@ const BooksPage = () => {
     // Function to fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5004/api/books/');
+        const response = await fetch(`${apiUrl}/books/`);
         const data = await response.json();
         console.log(data);
         setBooks(data);
@@ -44,7 +46,7 @@ const BooksPage = () => {
   const handleDelete = async (BookId) => {
     try {
       // Make the DELETE request to delete the Book
-      const response = await fetch(`http://localhost:5004/api/books/${BookId}`, {
+      const response = await fetch(`${apiUrl}/books/${BookId}`, {
         method: 'DELETE',
       });
 
@@ -72,7 +74,7 @@ const BooksPage = () => {
 
     try {
       // Make the POST request to add a new Book
-      const response = await fetch('http://localhost:5004/api/books/', {
+      const response = await fetch(`${apiUrl}/books/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ const BooksPage = () => {
     e.preventDefault();
     try {
       // Make the PUT request to update the Book
-      const response = await fetch(`http://localhost:5004/api/Books/${updateBook.id}`, {
+      const response = await fetch(`${apiUrl}/Books/${updateBook.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -150,14 +152,14 @@ const BooksPage = () => {
         <Container>
           <Row>
             <Col>
-              <h2 class="input-header">Add Book</h2>
+              <h2 className="input-header">Add Book</h2>
             < AddBookForm
               newBook={newBook} 
               handleInputChange={handleInputChange} 
               handleAddBook={handleAddBook}/>
             </Col>
             <Col>
-              <h2 class="input-header">Update Book</h2>
+              <h2 className="input-header">Update Book</h2>
               <UpdateBookForm
                 updateBook={updateBook}
                 handleUpdateBook={handleUpdateBook}

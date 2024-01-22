@@ -4,10 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import DepartmentTable from './DepartmentTable';
-import AddDepartmentForm from './AddDepartmentForm';
-import UpdateDepartmentForm from './UpdateDepartmentForm';
-import MyNavbar from '../Navbar';
+import DepartmentTable from '../components/Departments/DepartmentTable';
+import AddDepartmentForm from '../components/Departments/AddDepartmentForm';
+import UpdateDepartmentForm from '../components/Departments/UpdateDepartmentForm';
+import MyNavbar from '../components/Navbar';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const DepartmentsPage = () => {
   const [Departments, setDepartments] = useState([]);
@@ -24,7 +26,7 @@ const DepartmentsPage = () => {
     // Function to fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5004/api/departments/');
+        const response = await fetch(`${apiUrl}/departments/`);
         const data = await response.json();
         setDepartments(data);
       } catch (error) {
@@ -39,7 +41,7 @@ const DepartmentsPage = () => {
   const handleDelete = async (DepartmentId) => {
     try {
       // Make the DELETE request to delete the Department
-      const response = await fetch(`http://localhost:5004/api/Departments/${DepartmentId}`, {
+      const response = await fetch(`${apiUrl}/Departments/${DepartmentId}`, {
         method: 'DELETE',
       });
 
@@ -67,7 +69,7 @@ const DepartmentsPage = () => {
 
     try {
       // Make the POST request to add a new Department
-      const response = await fetch('http://localhost:5004/api/Departments/', {
+      const response = await fetch(`${apiUrl}/Departments/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -105,7 +107,7 @@ const DepartmentsPage = () => {
     e.preventDefault();
     try {
       // Make the PUT request to update the Department
-      const response = await fetch(`http://localhost:5004/api/Departments/${updateDepartment.id}`, {
+      const response = await fetch(`${apiUrl}/Departments/${updateDepartment.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -136,14 +138,14 @@ const DepartmentsPage = () => {
       <Container>
         <Row>
           <Col>
-            <h2 class="input-header">Add Department</h2>
+            <h2 className="input-header">Add Department</h2>
             < AddDepartmentForm
               newDepartment={newDepartment} 
               handleInputChange={handleInputChange} 
               handleAddDepartment={handleAddDepartment}/>
           </Col>
           <Col>
-            <h2 class="input-header">Update Department</h2>
+            <h2 className="input-header">Update Department</h2>
             <UpdateDepartmentForm
               updateDepartment={updateDepartment}
               handleUpdateDepartment={handleUpdateDepartment}

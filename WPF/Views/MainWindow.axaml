@@ -3,26 +3,32 @@
         xmlns:vm="using:WPF.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:converters="using:WPF.Converters"
+        xmlns:views="clr-namespace:WPF.NavBar"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="WPF.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="WPF">
-
+    <Window.Resources>
+        <converters:DateConverter x:Key="DateConverter"/>
+    </Window.Resources>
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <StackPanel HorizontalAlignment="Center" Margin="10">
+    <Grid>
+    <views:NavBar/>
+
+    <StackPanel HorizontalAlignment="Center" Margin="10" Height="25">
         <StackPanel Orientation="Horizontal" Spacing="50">
             <DataGrid ItemsSource="{Binding Authors}" 
                     AutoGenerateColumns="False" IsReadOnly="True" 
-                    GridLinesVisibility="All"
-                    BorderThickness="1" BorderBrush="Green">
+                    GridLinesVisibility="All">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding id}" IsVisible="False"/>
                     <DataGridTextColumn Header="First Name" Binding="{Binding FirstName}" />
                     <DataGridTextColumn Header="Last Name" Binding="{Binding LastName}" />
-                    <DataGridTextColumn Header="Birthdate" Binding="{Binding Birthdate}" />
+                    <DataGridTextColumn Header="Birthdate" Binding="{Binding Birthdate, Converter={StaticResource DateConverter}}" />
                     <DataGridTextColumn Header="Nationality" Binding="{Binding Nationality}" />
 
                     <DataGridTemplateColumn Header="Actions">
@@ -51,4 +57,5 @@
             </StackPanel>
         </StackPanel>
     </StackPanel>
+    </Grid>
 </Window>

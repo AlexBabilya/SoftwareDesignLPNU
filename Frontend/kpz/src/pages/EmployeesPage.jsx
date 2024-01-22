@@ -4,10 +4,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import EmployeeTable from './EmployeeTable';
-import AddEmployeeForm from './AddEmployeeForm';
-import UpdateEmployeeForm from './UpdateEmployeeForm';
-import MyNavbar from '../Navbar';
+import EmployeeTable from '../components/Employees/EmployeeTable';
+import AddEmployeeForm from '../components/Employees/AddEmployeeForm';
+import UpdateEmployeeForm from '../components/Employees/UpdateEmployeeForm';
+import MyNavbar from '../components/Navbar';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const EmployeesPage = () => {
   const [Employees, setEmployees] = useState([]);
@@ -30,7 +32,7 @@ const EmployeesPage = () => {
     // Function to fetch data when the component mounts
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:5004/api/Employees/');
+        const response = await fetch(`${apiUrl}/Employees/`);
         const data = await response.json();
         setEmployees(data);
       } catch (error) {
@@ -45,7 +47,7 @@ const EmployeesPage = () => {
   const handleDelete = async (EmployeeId) => {
     try {
       // Make the DELETE request to delete the Employee
-      const response = await fetch(`http://localhost:5004/api/Employees/${EmployeeId}`, {
+      const response = await fetch(`${apiUrl}/Employees/${EmployeeId}`, {
         method: 'DELETE',
       });
 
@@ -73,7 +75,7 @@ const EmployeesPage = () => {
 
     try {
       // Make the POST request to add a new Employee
-      const response = await fetch('http://localhost:5004/api/Employees/', {
+      const response = await fetch(`${apiUrl}/Employees/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -117,7 +119,7 @@ const EmployeesPage = () => {
     e.preventDefault();
     try {
       // Make the PUT request to update the Employee
-      const response = await fetch(`http://localhost:5004/api/Employees/${updateEmployee.id}`, {
+      const response = await fetch(`${apiUrl}/Employees/${updateEmployee.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -151,14 +153,14 @@ const EmployeesPage = () => {
       <Container>
         <Row>
           <Col>
-            <h2 class="input-header">Add Employee</h2>
+            <h2 className="input-header">Add Employee</h2>
             < AddEmployeeForm
               newEmployee={newEmployee} 
               handleInputChange={handleInputChange} 
               handleAddEmployee={handleAddEmployee}/>
             </Col>
           <Col>
-            <h2 class="input-header">Update Employee</h2>
+            <h2 className="input-header">Update Employee</h2>
             <UpdateEmployeeForm
               updateEmployee={updateEmployee}
               handleUpdateEmployee={handleUpdateEmployee}

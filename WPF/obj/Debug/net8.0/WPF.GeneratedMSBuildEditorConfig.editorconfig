@@ -22,3 +22,6 @@ build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
 
 [/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/WPF/Views/MainWindow.axaml]
 build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml
+
+[/home/oleksandbabilia/Uni/Labs/SoftwareDesign/SoftwareDesignLPNU/WPF/Views/NavBar.axaml]
+build_metadata.AdditionalFiles.SourceItemGroup = AvaloniaXaml

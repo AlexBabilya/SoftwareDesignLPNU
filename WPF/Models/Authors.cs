@@ -9,7 +9,6 @@ public class Author
     public string Nationality { get; set; }
     public int id { get; set; }
 
-
     public Author(int ID, string firstName , string lastName, DateTimeOffset? birthdate, string nationality)
     {
         id = ID;

@@ -15,7 +15,7 @@ const BookTable = ({ Books, onDelete, onUpdate }) => {
 
   return (
     <div>
-      <h2 class="header">Book Table</h2>
+      <h2 className="header">Book Table</h2>
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>

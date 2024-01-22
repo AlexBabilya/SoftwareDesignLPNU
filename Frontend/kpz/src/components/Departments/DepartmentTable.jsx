@@ -15,7 +15,7 @@ const DepartmentTable = ({ Departments, onDelete, onUpdate }) => {
 
   return (
     <div>
-      <h2 class="header">Department Table</h2>
+      <h2 className="header">Department Table</h2>
       <Table striped bordered hover variant="dark">
         <thead>
           <tr>

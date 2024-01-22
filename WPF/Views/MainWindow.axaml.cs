@@ -14,7 +14,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         viewModel = new MainWindowViewModel(); 
-        DataContext = viewModel.Authors;
+        DataContext = viewModel;
     }
     
     private async void ProcessRequest(object sender, RoutedEventArgs e)
@@ -26,10 +26,15 @@ public partial class MainWindow : Window
         var nationality = NationalityTextBox.Text;
         
         if (id == null)
-            ((MainWindowViewModel)DataContext).AddAsync(firstName, lastName, birthdate, nationality);
+        {
+            Author author = new Author(1, firstName, lastName, birthdate, nationality);
+            ((MainWindowViewModel)DataContext).AddCommand.Execute(author);
+        }
         else 
-            ((MainWindowViewModel)DataContext).UpdateAsync(id, firstName, lastName, birthdate, nationality);
-        
+        {
+            Author author = new Author(int.Parse(id), firstName, lastName, birthdate, nationality);
+            ((MainWindowViewModel)DataContext).UpdateCommand.Execute(author);
+        }        
         ClearTextBoxes();
     }
 
@@ -59,10 +64,12 @@ public partial class MainWindow : Window
         if (sender is Button button)
         {
             string id = button.Tag?.ToString();
-
+            
             if (id != null)
             {
-            ((MainWindowViewModel)DataContext).DeleteAsync(id);        
+                DateTimeOffset? tmp = new DateTimeOffset?();
+                Author author = new Author(int.Parse(id), "", "", tmp, "");
+                ((MainWindowViewModel)DataContext).DeleteCommand.Execute(author);        
             }
         }
     }
